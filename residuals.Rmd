@@ -1,0 +1,26 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+## Understanding Diagnostic Plots for Linear Regression Analysis
+
+Residuals can show how poorly a model represesnts data. Residuals are leftover of the outcome variable after fitting a model to data and can reveal unexplained patterns.
+
+1. Residuals vs Fitted
+
+  Shows if residuals have non-linear patterns. Heteroskedasticity = linear? Homoskedasticity = non linear. Heteroskedastic suggests the model did not explain the realtionship and it was left in the residuals.
+  
+2. Q-Q
+  Form a line? The residuals are normally distributed. 
+  Curve is bad.
+  
+3. Scale Location
+  Shows if residuals are spread equally along the ranges of predictors.
+  Can check assumption of homoscedasticity.
+  Horizontal line is good. The residuals are spread about randomly.
+  
+4. Residuals vs Leverage
+  
+  Check for influencers from outliers.
+  When outliers are outside of Cook's distance (high Cook's scores) they are influential to the regression results. Removal would alter the regression.

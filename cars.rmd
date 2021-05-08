@@ -1,0 +1,95 @@
+---
+title: "Motor Trends"
+author: "Ryan P"
+date: "5/07/2021"
+output: pdf_document
+---
+
+# Question One
+
+- "Is an automatic or manual transmission better for MPG"
+
+#### Exploratory Analyses
+
+
+```{r, include = FALSE}
+library(ggplot2)
+library(dplyr)
+```
+
+
+A scatter plot was used at first (See Appendix), but a violin plot best visualized the data quickly and showed that **a manual transmission is better for MPG**.
+
+```{r, fig.width = 5, fig.height = 3}
+cars <- arrange(mtcars, am)
+g <- ggplot(cars, aes(x = 1:32, y = mpg, col = as.factor(am)))
+g + geom_violin()
+```
+
+The plot does not indicate if the difference is significant or if the difference in fuel efficiency is due to the transmission type.
+
+A linear regression model was then used to see if there was significance and how much effect there was on fuel efficiency.
+
+```{r}
+mfit <- lm(mpg ~ am, mtcars)
+summary(mfit)$coef 
+```
+# Question Two
+
+- "Quantify the MPG difference between automatic and manual transmissions"
+
+
+From the coefficients, we can see that the average fuel efficiency for automatic transmissions is 17.147 mpg. The second coeffiecient in the "am" row is **the difference in fuel efficiency of 7.244 mpg** that is apparent between manual and automatic transmissions. The average manual car therefore has an mpg of 24.392.
+The R^2 value of `r summary(mfit)$r.squared`, indicates that the transmission factor can only explain 36% of the variation.
+
+## Executive Summary
+
+Though there appears to be a distinct improvement in gas mileage in manual vehicles,
+further analysis suggests that it is not due to the transmission, but to other
+confounding factors such as weight, cylinders, and displacement (See Appendix).
+
+
+## ANALYZE the Residual Plots
+Looking at the residual plots of fuel efficiency vs transmission model produces:
+
+```{r fig.cap= "Transmission Model"}
+par(mfrow = c(2,2))
+plot(mfit)
+```
+The first plot is heteroskedastic in that it shows non-constant variance and a spread in the residuals with the different transmissions.
+The Q-Q plot does indicate that the residuals are normally distributed.
+The Scale-Location reflects the spread of the residuals with a non-horizontal line.
+The last plot does not make it easy to identify any outliers or influencers.
+
+# APPENDIX
+
+# Further Linear Regressions
+
+ANOVA was used to identify other significant alternatives to transmission for causing variation in fuel efficiency. The linear regression including these factors resulted in higher R-squared values.
+```{r}
+
+allfit <- lm(mpg ~., mtcars)
+anova(allfit)
+```
+Cylinders, Displacement, and Weight come out as significant and worth exploring.
+
+```{r}
+bitfit <- lm(mpg~ cyl + disp+ wt, mtcars)
+summary(bitfit)$coef
+```
+The linear regression of fuel efficiency due to cylinders, displacement, and weight has an R^2 value of `r summary(bitfit)$r.squared` which is closer to that of the model including all variables (R-squared =`r summary(allfit)$r.squared`)
+
+
+Residual plots for the model involving these three variables show better homoskedasticity than the transmission model.
+```{r, fig.cap = "Three Factor Model"}
+par(mfrow = c(2,2))
+plot(bitfit)
+```
+
+
+```{r Scatter, fig.width = 5, fig.height = 3, echo = FALSE, fig.cap = "Scatter Plot"}
+cars <- arrange(mtcars, am)
+g <- ggplot(cars, aes(x = 1:32, y = mpg, col = as.factor(am)))
+g + geom_point()
+```
+
